@@ -7,6 +7,15 @@ const express = require("express"),
     config = require('./config');
 
 const app = express();
+/* HTTPS Express
+var privateKey = fs.readFileSync('sslcert/server.key');
+var certificate = fs.readFileSync('sslcert/server.crt');
+
+var credentials = {key: privateKey, cert: certificate};
+
+
+var app = express.createServer(credentials);
+*/
 
 var log = function(msg) {
     if (config.log) {
@@ -39,7 +48,7 @@ app.listen(port);
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
 app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
 
-app.get('/', function(req, res) {
+app.get('/', cors(corsOptions), function(req, res) {
     res.send("nothing to see here");
 });
 
@@ -59,7 +68,7 @@ var db_code = [],
 init();
 
 
-app.get('/data', function(req, res) {
+app.post('/data', cors(corsOptions), function(req, res) {
     console.log(req.query.keyword);
 
     sqlquery(req.query.keyword, function(rows) {
