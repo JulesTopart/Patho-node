@@ -48,7 +48,6 @@ var port = config.port;
 https.createServer(credentials, app)
     .listen(port, function() {})
 
-app.listen(port);
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
 app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
 
