@@ -39,7 +39,7 @@ app.get('/data', function(req, res) {
         } else {
             //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
             //il se peut que un code soit lié à plusieur rapports.
-            for (let index = 0; index < rows.length; index++) {
+            for (var index = 0; index < rows.length; index++) {
                 db_code.push(rows[index].num_exam);
                 db_lib_organe.push(rows[index].lib_organe);
                 db_lib_lesion.push(rows[index].lib_lesion);
