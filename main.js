@@ -1,11 +1,53 @@
 #!/usr/bin/env node
 
-const express = require("express");
-const cors = require("cors");
-const app = express();
-const path = __dirname;
-const mysql = require("mysql");
+const express = require("express"),
+    cors = require("cors"),
+    path = require("path"),
+    mysql = require("mysql"),
+    config = require('./config');
 
+const app = express();
+
+var log = function(msg) {
+    if (config.log) {
+        console.log(msg);
+    }
+}
+
+log("[Info] : Logging enabled");
+
+app.use(cors());
+app.use(express.static('./webapp'));
+
+var basepath = path.resolve(__dirname);
+
+var whitelist = config.origins;
+var corsOptions = {
+    origin: function(origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    optionsSuccessStatus: 200
+}
+
+var port = config.port;
+
+app.listen(port);
+log("[Info] App listenning request from " + config.origins + " on port :" + port);
+app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+
+app.get('/', function(req, res) {
+    res.send("nothing to see here");
+});
+
+app.post('/', cors(corsOptions), function(req, res) {
+    res.end("OK");
+});
+
+app.options('/data', cors(corsOptions)) // enable pre-flight request for OPTIONS request
 
 var connection;
 var db_code = [],
@@ -16,15 +58,6 @@ var db_code = [],
 
 init();
 
-app.use(cors("*"));
-
-app.listen(3000, function() {});
-
-app.use(express.static('./webapp'));
-
-app.get('/', function(req, res) {
-    res.send("nothing to see here");
-});
 
 app.get('/data', function(req, res) {
     console.log(req.query.keyword);
