@@ -1,0 +1,25 @@
+{
+    "name": "patho-node",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+        "start": "node main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JulesTopart/Patho-node.git"
+    },
+    "author": "JulesTopart",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/JulesTopart/Patho-node/issues"
+    },
+    "homepage": "https://github.com/JulesTopart/Patho-node#readme",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "mysql": "^2.17.1"
+    }
+}
