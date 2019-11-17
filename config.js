@@ -2,7 +2,7 @@
 
 const config = {
     port: 3000,
-    log: false,
+    log: true,
     origins: [
         'https://haystackly.fr',
         'http://haystackly.fr',
