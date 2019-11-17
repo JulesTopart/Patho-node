@@ -4,18 +4,19 @@ const express = require("express"),
     cors = require("cors"),
     path = require("path"),
     mysql = require("mysql"),
-    config = require('./config');
+    fs = require("fs"),
+    https = require("https");
+
+config = require('./config');
 
 const app = express();
-/* HTTPS Express
-var privateKey = fs.readFileSync('sslcert/server.key');
-var certificate = fs.readFileSync('sslcert/server.crt');
 
-var credentials = {key: privateKey, cert: certificate};
+// HTTPS Express
+var privateKey = fs.readFileSync('/etc/ssl/private/ssl-cert-snakeoil.key');
+var certificate = fs.readFileSync('/etc/ssl/certs/ssl-cert-snakeoil.pem');
 
+var credentials = { key: privateKey, cert: certificate };
 
-var app = express.createServer(credentials);
-*/
 
 var log = function(msg) {
     if (config.log) {
@@ -43,6 +44,9 @@ var corsOptions = {
 }
 
 var port = config.port;
+
+https.createServer(credentials, app)
+    .listen(port, function() {})
 
 app.listen(port);
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
