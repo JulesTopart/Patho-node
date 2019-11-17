@@ -6,8 +6,8 @@ const config = {
     origins: [
         'https://haystackly.fr',
         'http://haystackly.fr',
-        'http://localhost:8081/',
-        'http://localhost:8080/'
+        'http://localhost:8081',
+        'http://localhost:8080'
     ]
 };
 
