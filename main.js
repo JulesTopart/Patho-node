@@ -23,7 +23,7 @@ app.listen(3000, function() {});
 app.use(express.static('./webapp'));
 
 app.get('/', function(req, res) {
-    res.sendFile(path + '/webapp/index.html');
+    res.send("nothing to see here");
 });
 
 app.get('/data', function(req, res) {
@@ -66,7 +66,7 @@ function init() {
         user: 'root',
         password: 'root',
         database: 'patho_search',
-        socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock'
+        socketPath: '/var/run/mysqld/mysqld.sock'
     });
 
     connection.connect(function(err) {
