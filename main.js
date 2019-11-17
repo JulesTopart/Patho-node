@@ -73,7 +73,7 @@ var db_code = [],
 init();
 
 
-app.post('/data', cors(corsOptions), function(req, res) {
+app.get('/data', cors(corsOptions), function(req, res) {
     console.log(req.query.keyword);
 
     sqlquery(req.query.keyword, function(rows) {
