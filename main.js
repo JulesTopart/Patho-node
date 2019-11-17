@@ -12,8 +12,8 @@ config = require('./config');
 const app = express();
 
 // HTTPS Express
-var privateKey = fs.readFileSync('server.key');
-var certificate = fs.readFileSync('server.cert');
+var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
 
 var credentials = { key: privateKey, cert: certificate };
 
