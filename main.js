@@ -64,8 +64,8 @@ function init() {
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'root',
-        database: 'patho_search',
+        password: 'Yjk4N2IwMjg4Nzcw',
+        database: 'pathosearch',
         socketPath: '/var/run/mysqld/mysqld.sock'
     });
 
