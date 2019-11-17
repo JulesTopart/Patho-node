@@ -12,8 +12,8 @@ config = require('./config');
 const app = express();
 
 // HTTPS Express
-var privateKey = fs.readFileSync('/etc/ssl/private/ssl-cert-snakeoil.key');
-var certificate = fs.readFileSync('/etc/ssl/certs/ssl-cert-snakeoil.pem');
+var privateKey = fs.readFileSync('server.key');
+var certificate = fs.readFileSync('server.cert');
 
 var credentials = { key: privateKey, cert: certificate };
 
