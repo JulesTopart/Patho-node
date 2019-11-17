@@ -5,7 +5,9 @@ const config = {
     log: false,
     origins: [
         'https://haystackly.fr',
-        'http://haystackly.fr'
+        'http://haystackly.fr',
+        'http://localhost:8081/',
+        'http://localhost:8080/'
     ]
 };
 
