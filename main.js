@@ -70,7 +70,7 @@ var db_code = [],
     db_emplacement = [];
 
 
-//init();
+init();
 
 
 app.get('/data', cors(corsOptions), function(req, res) {
