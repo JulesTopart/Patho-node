@@ -67,6 +67,7 @@ var connection;
 var db_code = [],
     db_lib_organe = [],
     db_lib_lesion = [],
+    db_rapport = [],
     db_emplacement = [];
 
 
@@ -90,6 +91,7 @@ app.get('/data', cors(corsOptions), function (req, res) {
                 db_code.push(rows[index].num_exam);
                 db_lib_organe.push(rows[index].lib_organe);
                 db_lib_lesion.push(rows[index].lib_lesion);
+                db_rapport.push(rows[index].rapport);
                 db_emplacement.push(rows[index].emplacement);
             }
 
@@ -97,11 +99,12 @@ app.get('/data', cors(corsOptions), function (req, res) {
                 code: db_code,
                 lib_organe: db_lib_organe,
                 lib_lesion: db_lib_lesion,
+                rapport: db_rapport,
                 emplacement: db_emplacement,
                 error: false
             });
 
-            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_emplacement = [];
+            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
         }
     });
 
