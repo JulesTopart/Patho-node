@@ -45,10 +45,10 @@ var corsOptions = {
 
 var port = config.port;
 
-https.createServer(credentials, app)
-    .listen(port, function () {
-        log("Listening HTTPS on port : " + port);
-    })
+// https.createServer(credentials, app)
+//     .listen(port, function () {
+//         log("Listening HTTPS on port : " + port);
+//     })
 
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
 app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
@@ -128,7 +128,7 @@ function init() {
 
 
 function sqlquery(keyword, callback) {
-    var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
+    var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `rapport`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
     console.log(query_db);
 
     connection.query(query_db, function (err, rows) {
