@@ -15,7 +15,7 @@ const app = express();
 // var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
 // var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
 
-var credentials = { key: privateKey, cert: certificate };
+//var credentials = { key: privateKey, cert: certificate };
 
 
 var log = function (msg) {
