@@ -110,15 +110,6 @@ app.get('/data', cors(corsOptions), function (req, res) {
     });
 });
 
-app.get('/createAccount', cors(corsOptions), function (req, res) {
-    console.log(req.query.keyword);
-
-    sqlcreateUser(req.query.userID, req.query.name, req.query.firstName, req.query.profilePicture, function (rows) {
-
-    });
-});
-
-
 
 //TODO Hide pass
 function init() {
@@ -151,25 +142,6 @@ function sqlqueryKey(keyword, callback) {
         }
 
         return callback(rows);
-    });
-}
-
-
-//TODO add the picture in the query
-function sqlcreateUser(name, firstName, password, profilePicture, callback) {
-    var getUserNumber = "SELECT COUNT(*) FROM `employees`";
-
-    connection.query(getUserNumber, function (err, result, fields) {
-        if (err) throw err;
-        console.log(result);
-
-        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`) VALUES ('" + result + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "')";
-        console.log(query_db);
-
-        connection.query(query_db, function (err, result) {
-            if (err) throw err;
-            console.log("1 userAccount inserted");
-        });
     });
 }
 
