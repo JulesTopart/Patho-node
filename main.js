@@ -12,13 +12,13 @@ config = require('./config');
 const app = express();
 
 // HTTPS Express
-var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
-var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
+// var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
+// var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
 
 var credentials = { key: privateKey, cert: certificate };
 
 
-var log = function(msg) {
+var log = function (msg) {
     if (config.log) {
         console.log(msg);
     }
@@ -33,7 +33,7 @@ var basepath = path.resolve(__dirname);
 
 var whitelist = config.origins;
 var corsOptions = {
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
         if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
         } else {
@@ -46,18 +46,18 @@ var corsOptions = {
 var port = config.port;
 
 https.createServer(credentials, app)
-    .listen(port, function() {
+    .listen(port, function () {
         log("Listening HTTPS on port : " + port);
     })
 
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
 app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
 
-app.get('/', cors(corsOptions), function(req, res) {
+app.get('/', cors(corsOptions), function (req, res) {
     res.send("nothing to see here");
 });
 
-app.post('/', cors(corsOptions), function(req, res) {
+app.post('/', cors(corsOptions), function (req, res) {
     res.end("OK");
 });
 
@@ -73,10 +73,10 @@ var db_code = [],
 init();
 
 
-app.get('/data', cors(corsOptions), function(req, res) {
+app.get('/data', cors(corsOptions), function (req, res) {
     console.log(req.query.keyword);
 
-    sqlquery(req.query.keyword, function(rows) {
+    sqlquery(req.query.keyword, function (rows) {
         console.log("return from DB = " + rows);
 
         if (rows == false) {
@@ -111,12 +111,12 @@ function init() {
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'Yjk4N2IwMjg4Nzcw',
-        database: 'pathosearch',
+        password: 'MGZiYmNmNWU0ZDMx',
+        database: 'pathoSearch',
         socketPath: '/var/run/mysqld/mysqld.sock'
     });
 
-    connection.connect(function(err) {
+    connection.connect(function (err) {
         if (err) {
             log('[Error] : Error connecting to DB: ' + err.stack);
             return;
@@ -131,7 +131,7 @@ function sqlquery(keyword, callback) {
     var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
     console.log(query_db);
 
-    connection.query(query_db, function(err, rows) {
+    connection.query(query_db, function (err, rows) {
         if (err) {
             return callback(false);
         }
