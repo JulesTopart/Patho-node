@@ -5,18 +5,11 @@ const express = require("express"),
     path = require("path"),
     mysql = require("mysql"),
     fs = require("fs"),
-    https = require("https");
+    http = require("http");
 
 config = require('./config');
 
 const app = express();
-
-// HTTPS Express
- var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
- var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
-
-var credentials = { key: privateKey, cert: certificate };
-
 
 var log = function (msg) {
     if (config.log) {
@@ -27,7 +20,6 @@ var log = function (msg) {
 log("[Info] : Logging enabled");
 
 app.use(cors());
-app.use(express.static('./webapp'));
 
 var basepath = path.resolve(__dirname);
 
@@ -45,14 +37,8 @@ var corsOptions = {
 
 var port = config.port;
 
- https.createServer(credentials, app)
-     .listen(port, function () {
-         log("Listening HTTPS on port : " + port);
-     })
-
-
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
-app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+app.options('/', cors(corsOptions)); // enable pre-flight request for OPTIONS request
 
 app.get('/', cors(corsOptions), function (req, res) {
     res.send("nothing to see here");
@@ -62,7 +48,10 @@ app.post('/', cors(corsOptions), function (req, res) {
     res.end("OK");
 });
 
-app.options('/data', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+app.options('/data', cors(corsOptions)); // enable pre-flight request for OPTIONS request
+
+app.listen(port);
+
 
 var connection;
 var db_code = [],
