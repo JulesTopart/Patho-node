@@ -5,18 +5,11 @@ const express = require("express"),
     path = require("path"),
     mysql = require("mysql"),
     fs = require("fs"),
-    https = require("https");
+    http = require("http");
 
 config = require('./config');
 
 const app = express();
-
-// HTTPS Express
-var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
-var certificate = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/fullchain.pem');
-
-var credentials = { key: privateKey, cert: certificate };
-
 
 var log = function (msg) {
     if (config.log) {
@@ -27,7 +20,6 @@ var log = function (msg) {
 log("[Info] : Logging enabled");
 
 app.use(cors());
-app.use(express.static('./webapp'));
 
 var basepath = path.resolve(__dirname);
 
@@ -45,14 +37,8 @@ var corsOptions = {
 
 var port = config.port;
 
-https.createServer(credentials, app)
-    .listen(port, function () {
-        log("Listening HTTPS on port : " + port);
-    })
-
-
 log("[Info] App listenning request from " + config.origins + " on port :" + port);
-app.options('/', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+app.options('/', cors(corsOptions)); // enable pre-flight request for OPTIONS request
 
 app.get('/', cors(corsOptions), function (req, res) {
     res.send("nothing to see here");
@@ -62,7 +48,10 @@ app.post('/', cors(corsOptions), function (req, res) {
     res.end("OK");
 });
 
-app.options('/data', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+app.options('/data', cors(corsOptions)); // enable pre-flight request for OPTIONS request
+
+app.listen(port);
+
 
 var connection;
 var db_code = [],
@@ -78,7 +67,7 @@ init();
 app.get('/data', cors(corsOptions), function (req, res) {
     console.log(req.query.keyword);
 
-    sqlqueryKey(req.query.keyword, function (rows) {
+    sqlquery(req.query.keyword, function (rows) {
         console.log("return from DB = " + rows);
 
         if (rows == false) {
@@ -108,6 +97,7 @@ app.get('/data', cors(corsOptions), function (req, res) {
             db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
         }
     });
+
 });
 
 
@@ -132,7 +122,7 @@ function init() {
 }
 
 
-function sqlqueryKey(keyword, callback) {
+function sqlquery(keyword, callback) {
     var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `rapport`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
     console.log(query_db);
 
@@ -146,3 +136,30 @@ function sqlqueryKey(keyword, callback) {
 }
 
 
+app.get('/createAccount', cors(corsOptions), function (req, res) {
+    console.log(req.query.keyword);
+
+    sqlcreateUser(req.query.userID, req.query.name, req.query.firstName, req.query.profilePicture, function (rows) {
+
+    });
+});
+
+
+
+//TODO add the picture in the query
+function sqlcreateUser(name, firstName, password, profilePicture, callback) {
+    var getUserNumber = "SELECT COUNT(*) FROM `employees`";
+
+    connection.query(getUserNumber, function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+
+        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`) VALUES ('" + result + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "')";
+        console.log(query_db);
+
+        connection.query(query_db, function (err, result) {
+            if (err) throw err;
+            console.log("1 userAccount inserted");
+        });
+    });
+}
