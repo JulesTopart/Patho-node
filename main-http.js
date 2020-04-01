@@ -145,12 +145,13 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
     sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
         if (rows == false) {
             res.send({
-                userCreatorError: true
+                userCreatorError: true,
+                userCreatormessage: "Une erreur c'est produite lors de la création de votre compte"
             })
         }
         else {
             res.send({
-                userCreatorError: true,
+                userCreatorError: false,
                 userCreatormessage: "Votre compte a été crée"
             })
 
@@ -161,12 +162,31 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
-    var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+    checkPresenceUser(name, function (rows) {
+        if (rows == false) {
+            var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+            connection.query(query_db, function (err, result) {
+                if (err) throw err;
+                console.log("1 userAccount inserted");
+
+                return callback(result);
+            });
+        }
+        else {
+            return callback(false);
+        }
+
+    });
+
+}
+
+
+function checkPresenceUser(name, callback) {
+    var query_db = "FROM `employees` SELECT `name` WHERE `name` ='" + name + "'";
     console.log(query_db);
 
     connection.query(query_db, function (err, result) {
         if (err) throw err;
-        console.log("1 userAccount inserted");
 
         return callback(result);
     });
