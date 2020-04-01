@@ -156,7 +156,7 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
         if (err) throw err;
         console.log(result);
 
-        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (result + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (result[0] + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
         console.log(query_db);
 
         connection.query(query_db, function (err, result) {
