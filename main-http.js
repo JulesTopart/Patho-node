@@ -143,18 +143,29 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
     console.log(req.query.keyword);
 
     sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
+        if (rows == false) {
+            res.send({
+                userCreatorError: true
+            })
+        }
+        else {
+            res.send({
+                userCreatorError: true,
+                userCreatormessage: "Votre compte a été crée"
+            })
 
+        }
     });
 });
 
 
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
-        var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
-        console.log(query_db);
+    var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+    console.log(query_db);
 
-        connection.query(query_db, function (err, result) {
-            if (err) throw err;
-            console.log("1 userAccount inserted");
-	});
+    connection.query(query_db, function (err, result) {
+        if (err) throw err;
+        console.log("1 userAccount inserted");
+    });
 }
