@@ -162,7 +162,7 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
-    checkPresenceUser(name, first_name, function (rows) {
+    checkPresenceUser(name, first_Name, function (rows) {
         if (rows == false) {
             var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
             connection.query(query_db, function (err, result) {
