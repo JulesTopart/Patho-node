@@ -52,6 +52,7 @@ app.post('/', cors(corsOptions), function (req, res) {
 
 app.options('/data', cors(corsOptions)); // enable pre-flight request for OPTIONS request
 app.options('/createUser', cors(corsOptions)); // enable pre-flight request for OPTIONS request
+app.options('/signInUser', cors(corsOptions));
 
 app.listen(port);
 
