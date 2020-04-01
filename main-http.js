@@ -150,18 +150,11 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
-    var getUserNumber = "SELECT COUNT(*) FROM `employees`";
-
-    connection.query(getUserNumber, function (err, result) {
-        if (err) throw err;
-        console.log(result);
-
-        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (result[0] + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+        var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
         console.log(query_db);
 
         connection.query(query_db, function (err, result) {
             if (err) throw err;
             console.log("1 userAccount inserted");
-        });
-    });
+	});
 }
