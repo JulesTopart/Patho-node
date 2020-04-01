@@ -152,16 +152,12 @@ app.post('/createUser', cors(corsOptions), function (req, res) {
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
     var getUserNumber = "SELECT COUNT(*) FROM `employees`";
 
-    connection.query(function (err, result) {
+    var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (getUserNumber + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
+    console.log(query_db);
+
+    connection.query(query_db, function (err, result) {
         if (err) throw err;
-        console.log(result);
-
-        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (getUserNumber + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
-        console.log(query_db);
-
-        connection.query(query_db, function (err, result) {
-            if (err) throw err;
-            console.log("1 userAccount inserted");
-        });
+        console.log("1 userAccount inserted");
     });
+
 }
