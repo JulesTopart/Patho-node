@@ -8,6 +8,8 @@ const express = require("express"),
     http = require("http");
 
 config = require('./config');
+configMdp = require('../config-passwd/config');
+
 
 const app = express();
 
@@ -106,7 +108,7 @@ function init() {
     connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'MGZiYmNmNWU0ZDMx',
+        password: configMdp.passwd,
         database: 'pathoSearch',
         socketPath: '/var/run/mysqld/mysqld.sock'
     });
