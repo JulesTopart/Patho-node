@@ -162,7 +162,7 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
-    checkPresenceUser(name, function (rows) {
+    checkPresenceUser(name, first_name, function (rows) {
         if (rows == false) {
             var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
             connection.query(query_db, function (err, result) {
@@ -181,8 +181,8 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
 }
 
 
-function checkPresenceUser(name, callback) {
-    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "'";
+function checkPresenceUser(name, first_name, callback) {
+    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "','" + first_name + "'";
     console.log(query_db);
 
     connection.query(query_db, function (err, result) {
