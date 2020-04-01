@@ -182,7 +182,7 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
 
 
 function checkPresenceUser(name, first_name, callback) {
-    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "','" + first_name + "'";
+    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + first_name + "'";
     console.log(query_db);
 
     connection.query(query_db, function (err, result) {
