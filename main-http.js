@@ -167,5 +167,7 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
     connection.query(query_db, function (err, result) {
         if (err) throw err;
         console.log("1 userAccount inserted");
+
+        return callback(result);
     });
 }
