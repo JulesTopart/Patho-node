@@ -138,25 +138,24 @@ function sqlquery(keyword, callback) {
 }
 
 
-app.get('/createAccount', cors(corsOptions), function (req, res) {
+app.get('/createUser', cors(corsOptions), function (req, res) {
     console.log(req.query.keyword);
 
-    sqlcreateUser(req.query.userID, req.query.name, req.query.firstName, req.query.profilePicture, function (rows) {
+    sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
 
     });
 });
 
 
-
 //TODO add the picture in the query
-function sqlcreateUser(name, firstName, password, profilePicture, callback) {
+function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
     var getUserNumber = "SELECT COUNT(*) FROM `employees`";
 
-    connection.query(getUserNumber, function (err, result, fields) {
+    connection.query(function (err, result) {
         if (err) throw err;
         console.log(result);
 
-        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`) VALUES ('" + result + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "')";
+        var query_db = "INSERT INTO `employees`(`userID`, `name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + (getUserNumber + 1) + "' ,'" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
         console.log(query_db);
 
         connection.query(query_db, function (err, result) {
