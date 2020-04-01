@@ -68,8 +68,6 @@ init();
 
 
 app.get('/data', cors(corsOptions), function (req, res) {
-    console.log(req.query.keyword);
-
     sqlquery(req.query.keyword, function (rows) {
         console.log("return from DB = " + rows);
 
@@ -127,7 +125,6 @@ function init() {
 
 function sqlquery(keyword, callback) {
     var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `rapport`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
-    console.log(query_db);
 
     connection.query(query_db, function (err, rows) {
         if (err) {
@@ -138,10 +135,8 @@ function sqlquery(keyword, callback) {
     });
 }
 
-
+/************************** USER SIGNUP ***************************/
 app.get('/createUser', cors(corsOptions), function (req, res) {
-    console.log(req.query.keyword);
-
     sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
         if (rows == false) {
             res.send({
@@ -159,7 +154,6 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
     });
 });
 
-
 //TODO add the picture in the query
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
     checkPresenceUser(name, firstName, function (rows) {
@@ -167,7 +161,6 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
             var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
             connection.query(query_db, function (err, result) {
                 if (err) throw err;
-                console.log("1 userAccount inserted");
 
                 return callback(result);
             });
@@ -180,14 +173,42 @@ function sqlcreateUser(name, firstName, password, email, profilePicture, callbac
 
 }
 
-
 function checkPresenceUser(name, first_name, callback) {
     var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + first_name + "'";
-    console.log(query_db);
-
     connection.query(query_db, function (err, result) {
         if (err) throw err;
 
         return callback(result);
     });
+}
+
+
+/************************** USER SIGNIN ***************************/
+app.get('/signInUser', cors(corsOptions), function (req, res) {
+    sqlSignInUser(req.query.Name, req.query.FirstName, req.query.password, function (rows) {
+        if (rows == false) {
+            res.send({
+                userSignInError: true,
+                userSignInMessage: "Une erreur c'est produite lors de la connexion"
+            })
+        }
+        else {
+            res.send({
+                userSignInError: false,
+                userSignInMessage: "Connecté"
+            })
+        }
+    });
+});
+
+
+function sqlSignInUser(name, firstName, password, callback) {
+
+    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + password + "'";
+    connection.query(query_db, function (err, result) {
+        if (err) throw err;
+
+        return callback(result);
+    });
+
 }
