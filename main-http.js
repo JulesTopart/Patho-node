@@ -139,7 +139,7 @@ function sqlquery(keyword, callback) {
 }
 
 
-app.post('/createUser', cors(corsOptions), function (req, res) {
+app.get('/createUser', cors(corsOptions), function (req, res) {
     console.log(req.query.keyword);
 
     sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
