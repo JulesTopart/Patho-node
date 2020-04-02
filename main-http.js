@@ -228,8 +228,9 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
                 }
             });
         }
+        else return callback(false);
 
-        return callback(false);
+
     });
 
 }
