@@ -217,11 +217,13 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
         console.log(resultDB[0].password);
 
 
-        if (resultDB == true) {
+        if (resultDB[0] == true) {
             bcrypt.compare(userPassword, resultDB[0].password, function (err, result) {
                 if (err) throw err;
 
                 if (result == true) {
+                    console.log("ok pwd");
+
                     return callback(true);
                 }
             });
