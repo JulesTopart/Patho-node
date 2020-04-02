@@ -210,15 +210,23 @@ app.get('/signInUser', cors(corsOptions), function (req, res) {
 
 
 function sqlSignInUser(name, firstName, password, callback) {
-    bcrypt.hash(password, saltRounds, function (err, hash) {
-        console.log(hash);
 
-        var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + hash + "'";
-        connection.query(query_db, function (err, result) {
-            if (err) throw err;
+    var query_db = "SELECT `name`,`password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + password + "'";
+    connection.query(query_db, function (err, result) {
+        if (err) throw err;
 
-            return callback(false);
-        })
+        console.log(result['password']);
+
+
+        if (result == true) {
+            bcrypt.compare(password, result['password'], function (err, result) {
+                if (result == true) {
+                    return callback(true);
+                }
+            });
+        }
+
+        return callback(false);
     });
 
 }
