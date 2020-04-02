@@ -6,7 +6,7 @@ const express = require("express"),
     mysql = require("mysql"),
     fs = require("fs"),
     http = require("http"),
-    bcrypt = require('bcrypt');
+    bcrypt = require('bcryptjs');
 
 
 config = require('./config');
