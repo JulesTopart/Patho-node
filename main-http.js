@@ -73,7 +73,7 @@ init();
 
 app.get('/data', cors(corsOptions), function (req, res) {
     sqlquery(req.query.keyword, function (rows) {
-        console.log("return from DB = " + rows);
+        //console.log("return from DB = " + rows);
 
         if (rows == false) {
             res.send({
@@ -106,7 +106,6 @@ app.get('/data', cors(corsOptions), function (req, res) {
 });
 
 
-//TODO Hide pass
 function init() {
     connection = mysql.createConnection({
         host: 'localhost',
@@ -215,7 +214,7 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
     connection.query(query_db, function (err, resultDB) {
         if (err) throw err;
 
-        console.log(resultDB.password);
+        console.log(resultDB[0].password);
 
 
         if (resultDB == true) {
