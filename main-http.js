@@ -5,13 +5,16 @@ const express = require("express"),
     path = require("path"),
     mysql = require("mysql"),
     fs = require("fs"),
-    http = require("http");
+    http = require("http"),
+    bcrypt = require('bcrypt');
+
 
 config = require('./config');
 configMdp = require('../config-passwd/config');
 
-
 const app = express();
+const saltRounds = 10; //this variable is used to encrypt the password
+
 
 var log = function (msg) {
     if (config.log) {
@@ -159,12 +162,15 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
     checkPresenceUser(name, firstName, function (rows) {
         if (rows == false) {
-            var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + password + "','" + profilePicture + "','" + email + "')";
-            connection.query(query_db, function (err, result) {
-                if (err) throw err;
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+                var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + hash + "','" + profilePicture + "','" + email + "')";
+                connection.query(query_db, function (err, result) {
+                    if (err) throw err;
 
-                return callback(result);
+                    return callback(result);
+                });
             });
+
         }
         else {
             return callback(false);
