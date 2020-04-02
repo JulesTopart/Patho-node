@@ -217,7 +217,7 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
         console.log(resultDB[0].password);
 
 
-        if (resultDB[0] == true) {
+        if (resultDB[0].password) {
             bcrypt.compare(userPassword, resultDB[0].password, function (err, result) {
                 if (err) throw err;
 
