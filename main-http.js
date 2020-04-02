@@ -200,10 +200,22 @@ app.get('/signInUser', cors(corsOptions), function (req, res) {
             })
         }
         else {
-            res.send({
-                userSignInError: false,
-                userSignInMessage: "Connecté"
-            })
+            bcrypt.compare(req.query.password, rows.password, function (err, result) {
+                if (result == true) {
+                    return callback(true);
+
+                    res.send({
+                        userSignInError: false,
+                        userSignInMessage: "Connecté"
+                    })
+                }
+                else {
+                    res.send({
+                        userSignInError: true,
+                        userSignInMessage: "Mot de passe incorrect"
+                    })
+                }
+            });
         }
     });
 });
@@ -214,15 +226,6 @@ function sqlSignInUser(name, firstName, password, callback) {
     var query_db = "SELECT `name`,`password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + password + "'";
     connection.query(query_db, function (err, result) {
         if (err) throw err;
-        console.log(result.name + " " + password);
-
-        if (result == true) {
-            bcrypt.compare(password, result.password, function (err, result) {
-                if (result == true) {
-                    return callback(true);
-                }
-            });
-        }
 
         return callback(false);
     });
