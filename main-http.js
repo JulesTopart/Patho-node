@@ -214,6 +214,7 @@ function sqlSignInUser(name, firstName, password, callback) {
     var query_db = "SELECT `name`,`password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + password + "'";
     connection.query(query_db, function (err, result) {
         if (err) throw err;
+        console.log(result);
 
         if (result == true) {
             bcrypt.compare(password, result.password, function (err, result) {
