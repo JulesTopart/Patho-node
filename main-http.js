@@ -211,6 +211,8 @@ app.get('/signInUser', cors(corsOptions), function (req, res) {
 
 function sqlSignInUser(name, firstName, password, callback) {
     bcrypt.hash(password, saltRounds, function (err, hash) {
+        console.log(hash);
+
         var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + hash + "'";
         connection.query(query_db, function (err, result) {
             if (err) throw err;
