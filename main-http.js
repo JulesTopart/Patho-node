@@ -211,15 +211,15 @@ app.get('/signInUser', cors(corsOptions), function (req, res) {
 
 function sqlSignInUser(name, firstName, password, callback) {
 
-    var query_db = "SELECT `name`,`password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "' AND `password`= '" + password + "'";
-    connection.query(query_db, function (err, result) {
+    var query_db = "SELECT `name`,`password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "'";
+    connection.query(query_db, function (err, resultDB) {
         if (err) throw err;
 
-        console.log(result['password']);
+        console.log(resultDB.password);
 
 
-        if (result == true) {
-            bcrypt.compare(password, result['password'], function (err, result) {
+        if (resultDB == true) {
+            bcrypt.compare(password, resultDB.password, function (err, result) {
                 if (result == true) {
                     return callback(true);
                 }
