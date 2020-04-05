@@ -64,6 +64,10 @@ app.post('/', cors(corsOptions), function (req, res) {
 });
 
 app.options('/data', cors(corsOptions)) // enable pre-flight request for OPTIONS request
+app.options('/createUser', cors(corsOptions)); // enable pre-flight request for OPTIONS request
+app.options('/signInUser', cors(corsOptions));
+
+app.listen(port);
 
 var connection;
 var db_code = [],
@@ -112,7 +116,6 @@ app.get('/data', cors(corsOptions), function (req, res) {
 });
 
 
-//TODO Hide pass
 function init() {
     connection = mysql.createConnection({
         host: 'localhost',
@@ -129,13 +132,11 @@ function init() {
         }
         log('[INFO] : Connected to DB as id ' + connection.threadId);
     });
-
 }
 
 
 function sqlqueryKey(keyword, callback) {
     var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `rapport`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
-    console.log(query_db);
 
     connection.query(query_db, function (err, rows) {
         if (err) {
@@ -145,5 +146,97 @@ function sqlqueryKey(keyword, callback) {
         return callback(rows);
     });
 }
+
+/************************** USER SIGNUP ***************************/
+app.get('/createUser', cors(corsOptions), function (req, res) {
+    sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
+        if (rows == false) {
+            res.send({
+                userCreatorError: true,
+                userCreatormessage: "Une erreur c'est produite lors de la création de votre compte"
+            })
+        }
+        else {
+            res.send({
+                userCreatorError: false,
+                userCreatormessage: "Votre compte a été crée"
+            })
+
+        }
+    });
+});
+
+//TODO add the picture in the query
+function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
+    checkPresenceUser(name, firstName, function (rows) {
+        if (rows == false) {
+            bcrypt.hash(password, saltRounds, function (err, hash) {
+                var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + hash + "','" + profilePicture + "','" + email + "')";
+                connection.query(query_db, function (err, result) {
+                    if (err) throw err;
+
+                    return callback(result);
+                });
+            });
+
+        }
+        else {
+            return callback(false);
+        }
+
+    });
+
+}
+
+function checkPresenceUser(name, first_name, callback) {
+    var query_db = "SELECT `name` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + first_name + "'";
+    connection.query(query_db, function (err, result) {
+        if (err) throw err;
+
+        return callback(result);
+    });
+}
+
+
+/************************** USER SIGNIN ***************************/
+app.get('/signInUser', cors(corsOptions), function (req, res) {
+    sqlSignInUser(req.query.Name, req.query.FirstName, req.query.password, function (rows) {
+        if (rows == false) {
+            res.send({
+                userSignInError: true,
+                userSignInMessage: "Une erreur c'est produite lors de la connexion"
+            })
+        }
+        else {
+            res.send({
+                userSignInError: false,
+                userSignInMessage: "Connecté"
+            })
+        }
+    });
+});
+
+
+function sqlSignInUser(name, firstName, userPassword, callback) {
+
+    var query_db = "SELECT `password` FROM `employees` WHERE `name` ='" + name + "' AND `first_name` = '" + firstName + "'";
+    connection.query(query_db, function (err, resultDB) {
+        if (err) throw err;
+
+        if (resultDB[0].password) {
+            bcrypt.compare(userPassword, resultDB[0].password, function (err, result) {
+                if (err) throw err;
+
+                if (result == true) {
+                    return callback(true);
+                }
+            });
+        }
+        else return callback(false);
+
+    });
+
+}
+
 
 
