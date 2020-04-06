@@ -12,6 +12,7 @@ config = require('./config');
 configMdp = require('../config-passwd/config');
 
 const app = express();
+const saltRounds = 10; //this variable is used to encrypt the password
 
 // HTTPS Express
 var privateKey = fs.readFileSync('/etc/letsencrypt/live/haystackly.fr/privkey.pem');
