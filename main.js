@@ -120,7 +120,7 @@ function init() {
         host: 'localhost',
         user: 'root',
         password: configMdp.passwd,
-        database: 'pathoSearch',
+        database: 'pathosearch',
         socketPath: '/var/run/mysqld/mysqld.sock'
     });
 
