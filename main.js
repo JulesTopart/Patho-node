@@ -5,7 +5,8 @@ const express = require("express"),
     path = require("path"),
     mysql = require("mysql"),
     fs = require("fs"),
-    https = require("https");
+    https = require("https"),
+    bcrypt = require('bcryptjs');
 
 config = require('./config');
 configMdp = require('../config-passwd/config');
