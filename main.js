@@ -150,7 +150,7 @@ function sqlqueryKey(keyword, callback) {
 
 /************************** USER SIGNUP ***************************/
 app.get('/createUser', cors(corsOptions), function (req, res) {
-    sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, req.query.profilePicture, function (rows) {
+    sqlcreateUser(req.query.Name, req.query.FirstName, req.query.password, req.query.UserEmail, function (rows) {
         if (rows == false) {
             res.send({
                 userCreatorError: true,
@@ -168,11 +168,11 @@ app.get('/createUser', cors(corsOptions), function (req, res) {
 });
 
 //TODO add the picture in the query
-function sqlcreateUser(name, firstName, password, email, profilePicture, callback) {
+function sqlcreateUser(name, firstName, password, email, callback) {
     checkPresenceUser(name, firstName, function (rows) {
         if (rows == false) {
             bcrypt.hash(password, saltRounds, function (err, hash) {
-                var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `profilePicture`, `email`) VALUES ('" + name + "','" + firstName + "','" + hash + "','" + profilePicture + "','" + email + "')";
+                var query_db = "INSERT INTO `employees`(`name`, `first_name`, `password`, `email`) VALUES ('" + name + "','" + firstName + "','" + hash + "','" + email + "')";
                 connection.query(query_db, function (err, result) {
                     if (err) throw err;
 
