@@ -239,5 +239,57 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
 
 }
 
+app.get('/search', cors(corsOptions), function (req, res) {
+
+    sqlSearch(req.query.keywords, function (rows) {
+        console.log("return from DB = " + rows);
+
+        if (rows == false) {
+            res.send({
+                error: true
+            })
+        } else {
+            //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
+            //il se peut que un code soit lié à plusieur rapports.
+            for (var index = 0; index < rows.length; index++) {
+                db_code.push(rows[index].num_exam);
+                db_lib_organe.push(rows[index].lib_organe);
+                db_lib_lesion.push(rows[index].lib_lesion);
+                db_rapport.push(rows[index].rapport);
+                db_emplacement.push(rows[index].emplacement);
+            }
+
+            res.send({
+                code: db_code,
+                lib_organe: db_lib_organe,
+                lib_lesion: db_lib_lesion,
+                rapport: db_rapport,
+                emplacement: db_emplacement,
+                error: false
+            });
+
+            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
+        }
+    });
+
+});
+
+function sqlSearch(keywords, callback) {
+
+    var query = "SELECT `CR`,`Num_exam`, MATCH(`CR`) AGAINST ('"
+    keywords.forEach(key => {
+        query += ' +' + keywords[key];
+    });
 
 
+    endQuery = "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
+    console.log(query);
+
+    connection.query(query_db, function (err, rows) {
+        if (err) {
+            return callback(false);
+        }
+
+        return callback(rows);
+    });
+}
