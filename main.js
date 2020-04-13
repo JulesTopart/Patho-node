@@ -282,7 +282,7 @@ function sqlSearch(keywords, callback) {
     });
 
 
-    endQuery = "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
+    query += "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
     console.log(query);
 
     connection.query(query, function (err, rows) {
