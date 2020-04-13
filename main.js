@@ -285,7 +285,7 @@ function sqlSearch(keywords, callback) {
     endQuery = "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
     console.log(query);
 
-    connection.query(query_db, function (err, rows) {
+    connection.query(query, function (err, rows) {
         if (err) {
             return callback(false);
         }
