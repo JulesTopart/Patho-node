@@ -281,7 +281,7 @@ function sqlSearch(keywords, callback) {
 
     var query = "SELECT `CR`,`Num_exam`, MATCH(`CR`) AGAINST ('"
     keywords.forEach(key => {
-        query += ' +' + key;
+        query += ' +' + keywords[key];
     });
 
 
