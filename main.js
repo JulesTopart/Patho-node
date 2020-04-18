@@ -239,6 +239,10 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
 
 }
 
+
+/**
+ * *********** SEARCH BAR *******************
+ */
 app.get('/search', cors(corsOptions), function (req, res) {
 
     sqlSearch(req.query.keywords, function (rows) {
@@ -271,14 +275,13 @@ app.get('/search', cors(corsOptions), function (req, res) {
             db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
         }
     });
-
 });
 
 function sqlSearch(keywords, callback) {
 
     var query = "SELECT `CR`,`Num_exam`, MATCH(`CR`) AGAINST ('"
     keywords.forEach(key => {
-        query += ' +' + keywords[key];
+        query += ' +' + key;
     });
 
 
