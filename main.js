@@ -254,7 +254,7 @@ app.get('/search', cors(corsOptions), function (req, res) {
         } else {
             //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
             //il se peut que un code soit lié à plusieur rapports.
-            for (var index = 0; index < rows.length; index++) {
+            for (let index = 0; index < rows.length; index++) {
                 db_code.push(rows[index].Num_exam);
                 db_lib_organe.push(rows[index].libelle_organe);
                 db_lib_lesion.push(rows[index].libelle_lesion);
@@ -275,9 +275,10 @@ app.get('/search', cors(corsOptions), function (req, res) {
 });
 
 function sqlSearch(keywords, callback) {
+    console.log("keywords :", keywords);
 
-    var query = "SELECT `Num_exam`,`libelle_organe`,`libelle_lesion`,CR`, MATCH(`CR`) AGAINST ('" + keywords + "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
-    console.log(query);
+    var query = "SELECT `Num_exam`,`libelle_organe`,`libelle_lesion`,CR`, MATCH(`CR`) AGAINST (" + keywords + "IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
+    console.log("Seach Query : ", query);
 
     connection.query(query, function (err, rows) {
         if (err) {
