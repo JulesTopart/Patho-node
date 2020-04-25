@@ -243,7 +243,7 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
  * *********** SEARCH BAR *******************
  */
 app.get('/search', cors(corsOptions), function (req, res) {
-    console.log(req);
+    console.log(req.query);
 
     sqlSearch(req.query.keywords, function (rows) {
         console.log("return from DB = " + rows);
@@ -278,7 +278,7 @@ app.get('/search', cors(corsOptions), function (req, res) {
 function sqlSearch(keywords, callback) {
     console.log("keywords :", keywords);
 
-    var query = "SELECT `Num_exam`,`libelle_organe`,`libelle_lesion`,CR`, MATCH(`CR`) AGAINST (" + keywords + "IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
+    var query = "SELECT `Num_exam`,`libelle_organe`,`libelle_lesion`,CR`, MATCH(`CR`) AGAINST (" + keywords + " IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
     console.log("Seach Query : ", query);
 
     connection.query(query, function (err, rows) {
