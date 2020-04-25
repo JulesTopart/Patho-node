@@ -68,6 +68,8 @@ app.post('/', cors(corsOptions), function (req, res) {
 app.options('/data', cors(corsOptions)) // enable pre-flight request for OPTIONS request
 app.options('/createUser', cors(corsOptions)); // enable pre-flight request for OPTIONS request
 app.options('/signInUser', cors(corsOptions));
+app.options('/search', cors(corsOptions));
+
 
 
 var connection;
@@ -79,43 +81,6 @@ var db_code = [],
 
 
 init();
-
-
-app.get('/data', cors(corsOptions), function (req, res) {
-    console.log(req.query.keyword);
-
-    sqlqueryKey(req.query.keyword, function (rows) {
-        console.log("return from DB = " + rows);
-
-        if (rows == false) {
-            res.send({
-                error: true
-            })
-        } else {
-            //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
-            //il se peut que un code soit lié à plusieur rapports.
-            for (var index = 0; index < rows.length; index++) {
-                db_code.push(rows[index].num_exam);
-                db_lib_organe.push(rows[index].lib_organe);
-                db_lib_lesion.push(rows[index].lib_lesion);
-                db_rapport.push(rows[index].rapport);
-                db_emplacement.push(rows[index].emplacement);
-            }
-
-            res.send({
-                code: db_code,
-                lib_organe: db_lib_organe,
-                lib_lesion: db_lib_lesion,
-                rapport: db_rapport,
-                emplacement: db_emplacement,
-                error: false
-            });
-
-            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
-        }
-    });
-});
-
 
 function init() {
     connection = mysql.createConnection({
@@ -135,6 +100,41 @@ function init() {
     });
 }
 
+/**
+ * ************ GET KEYWORD INFOS *******************
+ */
+app.get('/data', cors(corsOptions), function (req, res) {
+    console.log(req.query.keyword);
+
+    sqlqueryKey(req.query.keyword, function (rows) {
+        console.log("return from DB = " + rows);
+
+        if (rows == false) {
+            res.send({
+                error: true
+            })
+        } else {
+            //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
+            //il se peut que un code soit lié à plusieur rapports.
+            for (var index = 0; index < rows.length; index++) {
+                db_code.push(rows[index].Num_exam);
+                db_lib_organe.push(rows[index].libelle_organe);
+                db_lib_lesion.push(rows[index].libelle_lesion);
+                db_rapport.push(rows[index].CR);
+            }
+
+            res.send({
+                code: db_code,
+                lib_organe: db_lib_organe,
+                lib_lesion: db_lib_lesion,
+                rapport: db_rapport,
+                error: false
+            });
+
+            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [];
+        }
+    });
+});
 
 function sqlqueryKey(keyword, callback) {
     var query_db = "SELECT `num_exam`, `lib_organe`, `lib_lesion`, `rapport`, `emplacement` FROM `database` WHERE `num_exam`='" + keyword + "'";
@@ -236,7 +236,6 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
         else return callback(false);
 
     });
-
 }
 
 
@@ -256,11 +255,10 @@ app.get('/search', cors(corsOptions), function (req, res) {
             //ce tableau permet de faire passer l'ensemble des rapports qui sont liés à un seul code. 
             //il se peut que un code soit lié à plusieur rapports.
             for (var index = 0; index < rows.length; index++) {
-                db_code.push(rows[index].num_exam);
-                db_lib_organe.push(rows[index].lib_organe);
-                db_lib_lesion.push(rows[index].lib_lesion);
-                db_rapport.push(rows[index].rapport);
-                db_emplacement.push(rows[index].emplacement);
+                db_code.push(rows[index].Num_exam);
+                db_lib_organe.push(rows[index].libelle_organe);
+                db_lib_lesion.push(rows[index].libelle_lesion);
+                db_rapport.push(rows[index].CR);
             }
 
             res.send({
@@ -268,24 +266,17 @@ app.get('/search', cors(corsOptions), function (req, res) {
                 lib_organe: db_lib_organe,
                 lib_lesion: db_lib_lesion,
                 rapport: db_rapport,
-                emplacement: db_emplacement,
                 error: false
             });
 
-            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [], db_emplacement = [];
+            db_code = [], db_lib_organe = [], db_lib_lesion = [], db_rapport = [];
         }
     });
 });
 
 function sqlSearch(keywords, callback) {
 
-    var query = "SELECT `CR`,`Num_exam`, MATCH(`CR`) AGAINST ('"
-    keywords.forEach(key => {
-        query += ' +' + keywords[key];
-    });
-
-
-    query += "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
+    var query = "SELECT `Num_exam`,`libelle_organe`,`libelle_lesion`,CR`, MATCH(`CR`) AGAINST ('" + keywords + "' IN NATURAL LANGUAGE MODE) AS SCORE FROM `database` ORDER BY SCORE DESC"
     console.log(query);
 
     connection.query(query, function (err, rows) {
