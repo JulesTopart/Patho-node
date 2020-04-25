@@ -243,9 +243,8 @@ function sqlSignInUser(name, firstName, userPassword, callback) {
  * *********** SEARCH BAR *******************
  */
 app.get('/search', cors(corsOptions), function (req, res) {
-    console.log(req.query);
 
-    sqlSearch(req.query.keywords, function (rows) {
+    sqlSearch(req.query.keyword, function (rows) {
         console.log("return from DB = " + rows);
 
         if (rows == false) {
